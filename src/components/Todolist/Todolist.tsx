@@ -66,11 +66,20 @@ const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsT
   }, [dispatch]);
   
   
-  const onAllClickHandler = useCallback(() => dispatch(changeFilterAC('all', todolistId)), [dispatch, todolistId]);
+  const onAllClickHandler = useCallback(() => dispatch(changeFilterAC({
+    filter: 'all',
+    id: todolistId
+  })), [dispatch, todolistId]);
   
-  const onActiveClickHandler = useCallback(() => dispatch(changeFilterAC('active', todolistId)), [dispatch, todolistId]);
+  const onActiveClickHandler = useCallback(() => dispatch(changeFilterAC({
+    filter: 'active',
+    id: todolistId
+  })), [dispatch, todolistId]);
   
-  const onCompletedClickHandler = useCallback(() => dispatch(changeFilterAC('completed', todolistId)), [dispatch, todolistId]);
+  const onCompletedClickHandler = useCallback(() => dispatch(changeFilterAC({
+    filter: 'completed',
+    id: todolistId
+  })), [dispatch, todolistId]);
   
   const onClickRemoveHandler = useCallback((taskId: string) => {
     dispatch(deleteTaskTC(todolistId, taskId));
@@ -82,7 +91,7 @@ const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsT
   
   const onChangeTitleHandler = useCallback((taskID: string, newValue: string) => {
     changeTaskTitle(todolistId, taskID, newValue);
-    dispatch(changeEntityStatusAC(todolistId, taskID, 'loading'));
+    dispatch(changeEntityStatusAC({todolistID: todolistId, taskID, entityStatus: 'loading'}));
   }, [changeTaskTitle, todolistId]);
   
   
