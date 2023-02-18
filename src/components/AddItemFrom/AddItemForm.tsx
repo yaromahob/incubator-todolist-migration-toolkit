@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import './AddItemForm.css';
 
 type AddItemFormPropsType = {
   addItem: (title: string) => void
@@ -32,7 +33,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
     }
   };
   
-  return <div>
+  return <div className="addItemForm">
     
     <TextField
       value={title}

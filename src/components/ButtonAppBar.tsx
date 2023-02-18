@@ -21,19 +21,11 @@ export const ButtonAppBar: React.FC<ButtonAppBarType> = ({
     <Box sx={{flexGrow: 1}}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{mr: 2}}
-          >
-            <MenuIcon/>
-          </IconButton>
           <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-            News
+            T O D O L I S T
           </Typography>
-          {isLoggedIn && <Button color="inherit" onClick={logInOut}>Log Out</Button>}
+          {isLoggedIn &&
+            <Button color="inherit" variant={'outlined'} size={'large'} onClick={logInOut}>Log Out</Button>}
         </Toolbar>
       </AppBar>
     </Box>

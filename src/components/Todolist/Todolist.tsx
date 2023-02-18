@@ -12,8 +12,8 @@ import {
 } from "../../state/todolist-reducer";
 import {
   addTaskTC, changeEntityStatusAC,
-  deleteTaskTC,
-  getTasksTC, TasksDomainType,
+  deleteTasks,
+  fetchTasks, TasksDomainType,
   updateTaskTC,
   updateTaskTitleTC
 } from "../../state/task-reducer";
@@ -21,6 +21,7 @@ import Task from "../Task/Task";
 import ButtonContainer from "../ButtonContainer";
 import {TaskStatusesType, TTaskApi} from "../../api/task-api";
 import {RequestStatusType} from "../../App/app-reducer";
+import './todolist.css';
 
 
 export type TodolistPropsType = {
@@ -38,7 +39,7 @@ const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsT
   const dispatch = useAppDispatch();
   let tasks = useAppSelector<Array<TTaskApi & TasksDomainType>>(state => state.tasks[todolistId]);
   useEffect(() => {
-    dispatch(getTasksTC(todolistId));
+    dispatch(fetchTasks(todolistId));
   }, [dispatch, todolistId]);
   
   const addTask = useCallback(
@@ -82,7 +83,7 @@ const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsT
   })), [dispatch, todolistId]);
   
   const onClickRemoveHandler = useCallback((taskId: string) => {
-    dispatch(deleteTaskTC(todolistId, taskId));
+    dispatch(deleteTasks({todolistId: todolistId, taskId: taskId}));
   }, [dispatch, todolistId]);
   
   const onChangeStatusHandler = useCallback((taskID: string, status: TaskStatusesType) => {
@@ -91,7 +92,7 @@ const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsT
   
   const onChangeTitleHandler = useCallback((taskID: string, newValue: string) => {
     changeTaskTitle(todolistId, taskID, newValue);
-    dispatch(changeEntityStatusAC({todolistID: todolistId, taskID, entityStatus: 'loading'}));
+    dispatch(changeEntityStatusAC({todolistId, taskID, entityStatus: 'loading'}));
   }, [changeTaskTitle, todolistId]);
   
   
@@ -133,7 +134,7 @@ const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsT
           })
         }
       </ul>
-      <div>
+      <div className="buttonWrapper">
         <ButtonContainer filter={filter}
                          buttonTitle={'All'}
                          buttonColor={"secondary"}
