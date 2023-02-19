@@ -7,14 +7,15 @@ import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import {useFormik} from "formik";
+import {FormikHelpers, useFormik} from "formik";
 import {useAppDispatch, useAppSelector} from "../../state/store";
-import {logInTC} from "./auth-reducer";
+import {logIn} from "./auth-reducer";
 import {Navigate} from "react-router-dom";
 
-type FormikErrorType = {
-  email?: string
-  password?: string
+type FormikValueType = {
+  email: string
+  password: string
+  rememberMe: boolean
 }
 
 export const Login = () => {
@@ -27,7 +28,7 @@ export const Login = () => {
       rememberMe: false
     },
     validate: (values) => {
-      const errors: FormikErrorType = {};
+      const errors: Partial<FormikValueType> = {};
       
       if (!values.email) {
         errors.email = 'Required';
@@ -41,17 +42,19 @@ export const Login = () => {
       }
       return errors;
     },
-    onSubmit: values => {
-      dispatch(logInTC(values));
-      formik.resetForm();
+    onSubmit: async (values: FormikValueType, formikHelpers: FormikHelpers<FormikValueType>) => {
+      const res = await dispatch(logIn(values));
+      if (res.type === logIn.rejected.type) {
+        if (res.payload) {
+          formikHelpers.setErrors(res.payload);
+        }
+      }
     }
   });
-  console.log(formik.errors);
   
   if (isLoggedIn) {
     return <Navigate to={'/'}/>;
   }
-  
   
   return <Grid container justifyContent={'center'}>
     <Grid item justifyContent={'center'}>
@@ -69,10 +72,6 @@ export const Login = () => {
         </FormLabel>
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
-            {/*                                        value={formik.values.password}
-            {...formik.getFieldProps('email')} ===     onBlur={formik.handleBlur}
-                                                       onChange={formik.handleChange}
-            */}
             <TextField label="Email"
                        margin="normal"
                        {...formik.getFieldProps('email')}

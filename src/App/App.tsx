@@ -8,7 +8,7 @@ import {ButtonAppBar} from "../components/ButtonAppBar";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 import {Routes, Route, Navigate} from 'react-router-dom';
 import {Login} from '../features/Login/Login';
-import {authMeTC, logOutTC} from "../features/Login/auth-reducer";
+import {authMe, logOut} from "../features/Login/auth-reducer";
 import './App.css';
 
 
@@ -17,8 +17,9 @@ function App() {
   const status = useAppSelector(state => state.app.status);
   const isInitialized = useAppSelector(state => state.app.isInitialized);
   const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
+  
   useEffect(() => {
-    dispatch(authMeTC());
+    dispatch(authMe());
   }, []);
   
   if (!isInitialized) {
@@ -30,7 +31,7 @@ function App() {
   }
   
   const logInOut = () => {
-    dispatch(logOutTC());
+    dispatch(logOut());
   };
   
   return (
