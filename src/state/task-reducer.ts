@@ -19,6 +19,7 @@ export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (todolistID
   
   const res = await taskApi.getTasks(todolistID);
   const tasks = res.data.items;
+  console.log(tasks);
   thunkAPI.dispatch(setAppStatus({value: 'succeeded'}));
   return {todolistID, tasks};
   

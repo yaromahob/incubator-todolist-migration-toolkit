@@ -1,7 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import './AddItemForm.css';
+import styles from './AddItemForm.module.scss';
 
 type AddItemFormPropsType = {
   addItem: (title: string) => void
@@ -10,13 +10,15 @@ type AddItemFormPropsType = {
 
 
 export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
-  let [title, setTitle] = useState("");
-  let [error, setError] = useState<string | null>(null);
+  const [title, setTitle] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [lineLength, setLineLength] = useState(0);
   
   const addItem = () => {
     if (title.trim() !== "") {
       props.addItem(title);
       setTitle("");
+      
     } else {
       setError("Title is required");
     }
@@ -24,32 +26,43 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
   
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
+    setLineLength(e.currentTarget.value.length);
+    
+    if (e.currentTarget.value.length > 20) {
+      setError("max length 20");
+    } else {
+      setError(null);
+    }
   };
   
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (title.length > 20) return;
     setError(null);
     if (e.charCode === 13) {
       addItem();
     }
   };
   
-  return <div className="addItemForm">
+  return <div className={styles.addItemForm}>
+    <div className={styles.writeFieldWrapper}>
+      {!!lineLength && <span className={styles.lengthCounter}>{lineLength}</span>}
+      <TextField
+        value={title}
+        onChange={onChangeHandler}
+        onKeyPress={onKeyPressHandler}
+        disabled={props.disabled}
+        id="outlined-basic"
+        label={error ? error : "type out here..."}
+        variant="outlined"
+        size="small"
+        error={!!error}
+      />
+    </div>
     
-    <TextField
-      value={title}
-      onChange={onChangeHandler}
-      onKeyPress={onKeyPressHandler}
-      disabled={props.disabled}
-      id="outlined-basic"
-      label={error ? "Title is required" : "type out here..."}
-      variant="outlined"
-      size="small"
-      error={!!error}
-    />
     
     <Button variant="contained"
             style={{maxWidth: '38px', maxHeight: '38px', minWidth: '38px', minHeight: '38px'}}
-            onClick={addItem}>+</Button>
+            onClick={addItem} disabled={!!error}>+</Button>
   
   </div>;
 });

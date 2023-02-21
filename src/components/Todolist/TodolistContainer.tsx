@@ -2,14 +2,14 @@ import React, {useCallback, useEffect} from 'react';
 import Grid from "@mui/material/Grid/Grid";
 import {AddItemForm} from "../AddItemFrom/AddItemForm";
 import Paper from "@mui/material/Paper/Paper";
-import Todolist from "./Todolist";
+import {Todolist} from "./Todolist";
 import {useAppDispatch, useAppSelector} from "../../state/store";
-import {createTodoListTC, getTodolistTC, TodolistDomainType} from "../../state/todolist-reducer";
+import {createTodoListTC, getTodolistTC} from "../../state/todolist-reducer";
 import {Navigate} from "react-router-dom";
 
 const TodolistContainer = () => {
   const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
-  const todolists = useAppSelector<Array<TodolistDomainType>>(state => state.todolists);
+  const todolists = useAppSelector(state => state.todolists);
   const dispatch = useAppDispatch();
   
   const addTodolist = useCallback(

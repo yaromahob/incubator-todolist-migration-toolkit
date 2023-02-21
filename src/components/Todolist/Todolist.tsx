@@ -13,15 +13,15 @@ import {
 import {
   addTaskTC, changeEntityStatusAC,
   deleteTasks,
-  fetchTasks, TasksDomainType,
+  fetchTasks,
   updateTaskTC,
   updateTaskTitleTC
 } from "../../state/task-reducer";
 import Task from "../Task/Task";
 import ButtonContainer from "../ButtonContainer";
-import {TaskStatusesType, TTaskApi} from "../../api/task-api";
+import {TaskStatusesType} from "../../api/task-api";
 import {RequestStatusType} from "../../App/app-reducer";
-import './todolist.css';
+import styles from './Todolist.module.scss';
 
 
 export type TodolistPropsType = {
@@ -33,11 +33,10 @@ export type TodolistPropsType = {
   order: number
 }
 
-const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsType) => {
+export const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsType) => {
   console.log('Todolist_RERENDER');
-  
   const dispatch = useAppDispatch();
-  let tasks = useAppSelector<Array<TTaskApi & TasksDomainType>>(state => state.tasks[todolistId]);
+  let tasks = useAppSelector(state => state.tasks[todolistId]);
   useEffect(() => {
     dispatch(fetchTasks(todolistId));
   }, [dispatch, todolistId]);
@@ -103,17 +102,19 @@ const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsT
     tasks = tasks.filter(t => t.status);
   }
   
+  
   return (
-    <div>
-      <h3>
-        <EditableSpan value={title} onChange={changeTodolistTitle}/>
-        {/*<button onClick={removeTodolist}>x</button>*/}
+    <div className={styles.todolistWrapper}>
+      <div className={styles.header}>
+        <div className={styles.title}>
+          <EditableSpan value={title} onChange={changeTodolistTitle}/>
+        </div>
         <IconButton aria-label="delete"
                     onClick={removeTodolist}
                     disabled={entityStatus === "loading"}>
           <DeleteIcon/>
         </IconButton>
-      </h3>
+      </div>
       <AddItemForm addItem={addTask} disabled={entityStatus === "loading"}/>
       <ul>
         {
@@ -134,22 +135,18 @@ const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsT
           })
         }
       </ul>
-      <div className="buttonWrapper">
-        <ButtonContainer filter={filter}
-                         buttonTitle={'All'}
-                         buttonColor={"secondary"}
+      <div className={styles.buttonWrapper}>
+        <ButtonContainer buttonTitle={'All'}
+                         buttonColor={"primary"}
                          callback={onAllClickHandler}/>
-        <ButtonContainer filter={filter}
-                         buttonTitle={'Active'}
-                         buttonColor={"success"}
+        <ButtonContainer buttonTitle={'Active'}
+                         buttonColor={"inherit"}
                          callback={onActiveClickHandler}/>
-        <ButtonContainer filter={filter}
-                         buttonTitle={'Completed'}
-                         buttonColor={"error"}
+        <ButtonContainer buttonTitle={'Completed'}
+                         buttonColor={"success"}
                          callback={onCompletedClickHandler}/>
       
       </div>
     </div>);
 });
 
-export default Todolist;

@@ -5,6 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {TaskStatusesType} from "../../api/task-api";
 import {RequestStatusType} from "../../App/app-reducer";
+import styles from './Task.module.scss';
 
 type TaskType = {
   taskID: string
@@ -33,7 +34,7 @@ const Task: React.FC<TaskType> = memo(({
   
   const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let isCompleted = e.currentTarget.checked;
-    onChangeStatus(taskID, status);
+    onChangeStatus(taskID, isCompleted ? 2 : 0);
   };
   
   const onChangeTitleHandler = (newValue: string) => {
@@ -41,7 +42,7 @@ const Task: React.FC<TaskType> = memo(({
   };
   
   return (
-    <li key={taskID} className={status ? "is-done" : ""}>
+    <li key={taskID} className={status === 2 ? styles.isDone : ""}>
       <Checkbox onChange={onChangeStatusHandler} checked={status === 2}/>
       <EditableSpan value={title} onChange={onChangeTitleHandler}/>
       <IconButton aria-label="delete" onClick={onClickRemoveHandler} disabled={entityStatus === 'loading'}>

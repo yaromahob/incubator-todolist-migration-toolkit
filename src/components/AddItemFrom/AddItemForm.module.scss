@@ -1,0 +1,16 @@
+.addItemForm {
+  display: flex;
+  gap: 10px;
+
+  .writeFieldWrapper {
+    position: relative;
+
+    .lengthCounter {
+      position: absolute;
+      font-size: 10px;
+      opacity: 0.7;
+      left: 94%;
+    }
+  }
+
+}
