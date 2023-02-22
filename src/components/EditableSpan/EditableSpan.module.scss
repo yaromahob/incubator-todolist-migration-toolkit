@@ -1,0 +1,17 @@
+.editSpanWrapper {
+  display: flex;
+
+  div {
+    div {
+      width: 200px;
+
+      input {
+        height: 20px;
+      }
+    }
+  }
+
+  span {
+    white-space: pre-wrap;
+  }
+}

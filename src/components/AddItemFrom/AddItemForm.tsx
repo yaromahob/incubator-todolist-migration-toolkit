@@ -12,7 +12,6 @@ type AddItemFormPropsType = {
 export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
   const [title, setTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [lineLength, setLineLength] = useState(0);
   
   const addItem = () => {
     if (title.trim() !== "") {
@@ -26,7 +25,6 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
   
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
-    setLineLength(e.currentTarget.value.length);
     
     if (e.currentTarget.value.length > 20) {
       setError("max length 20");
@@ -45,14 +43,13 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
   
   return <div className={styles.addItemForm}>
     <div className={styles.writeFieldWrapper}>
-      {!!lineLength && <span className={styles.lengthCounter}>{lineLength}</span>}
       <TextField
         value={title}
         onChange={onChangeHandler}
         onKeyPress={onKeyPressHandler}
         disabled={props.disabled}
         id="outlined-basic"
-        label={error ? error : "type out here..."}
+        label={error ? error : `type out here... ${title.length ? title.length : ''}`}
         variant="outlined"
         size="small"
         error={!!error}

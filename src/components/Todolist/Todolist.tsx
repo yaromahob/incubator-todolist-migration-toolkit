@@ -124,6 +124,7 @@ export const Todolist = memo(({todolistId, filter, title, entityStatus}: Todolis
             return (
               <Task key={t.id}
                     taskID={t.id}
+                    todolistID={t.todoListId}
                     status={t.status}
                     title={t.title}
                     entityStatus={t.entityStatus}

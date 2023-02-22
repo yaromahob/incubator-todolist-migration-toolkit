@@ -9,6 +9,7 @@ import styles from './Task.module.scss';
 
 type TaskType = {
   taskID: string
+  todolistID: string
   status: TaskStatusesType
   title: string
   entityStatus: RequestStatusType
@@ -18,6 +19,7 @@ type TaskType = {
 }
 
 const Task: React.FC<TaskType> = memo(({
+                                         todolistID,
                                          taskID,
                                          status,
                                          title,
@@ -44,7 +46,10 @@ const Task: React.FC<TaskType> = memo(({
   return (
     <li key={taskID} className={status === 2 ? styles.isDone : ""}>
       <Checkbox onChange={onChangeStatusHandler} checked={status === 2}/>
-      <EditableSpan value={title} onChange={onChangeTitleHandler}/>
+      <EditableSpan value={title}
+                    onChange={onChangeTitleHandler}
+                    todolistID={todolistID}
+                    id={taskID}/>
       <IconButton aria-label="delete" onClick={onClickRemoveHandler} disabled={entityStatus === 'loading'}>
         <DeleteIcon/>
       </IconButton>
