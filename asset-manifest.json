@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/incubator-todolist-migration-toolkit/static/css/main.43f2ee26.css",
-    "main.js": "/incubator-todolist-migration-toolkit/static/js/main.556fcc19.js",
+    "main.js": "/incubator-todolist-migration-toolkit/static/js/main.1a2e32b0.js",
     "index.html": "/incubator-todolist-migration-toolkit/index.html",
     "main.43f2ee26.css.map": "/incubator-todolist-migration-toolkit/static/css/main.43f2ee26.css.map",
-    "main.556fcc19.js.map": "/incubator-todolist-migration-toolkit/static/js/main.556fcc19.js.map"
+    "main.1a2e32b0.js.map": "/incubator-todolist-migration-toolkit/static/js/main.1a2e32b0.js.map"
   },
   "entrypoints": [
     "static/css/main.43f2ee26.css",
-    "static/js/main.556fcc19.js"
+    "static/js/main.1a2e32b0.js"
   ]
 }
