@@ -36,9 +36,13 @@ function App() {
   
   return (
     <div className="App">
-      <ErrorSnackbar/>
-      <ButtonAppBar isLoggedIn={isLoggedIn} logInOut={logInOut}/>
-      {status === 'loading' && <LinearProgress color="secondary"/>}
+      <div className="headerWrapper">
+        <ErrorSnackbar/>
+        <ButtonAppBar isLoggedIn={isLoggedIn} logInOut={logInOut}/>
+        <div className="progressWrapper">
+          {status === 'loading' && <LinearProgress color="secondary"/>}
+        </div>
+      </div>
       <Container fixed>
         <Routes>
           <Route path={"/"} element={<TodolistContainer/>}/>

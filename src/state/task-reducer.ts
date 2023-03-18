@@ -33,6 +33,7 @@ export const deleteTasks = createAsyncThunk('tasks/deleteTasks', async (param: {
     entityStatus: 'loading'
   }));
   const res = await taskApi.deleteTask(param.todolistId, param.taskId);
+  thunkAPI.dispatch(setAppStatus({value: 'succeeded'}));
   return {todolistId: param.todolistId, taskId: param.taskId};
 });
 
