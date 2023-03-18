@@ -2,14 +2,10 @@ import {taskApi, TaskStatusesType, TTaskApi, UpdateTaskModelType} from "../api/t
 import {Dispatch} from "redux";
 import {AppRootStateType} from "./store";
 import {RequestStatusType, setAppStatus} from "../App/app-reducer";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import {RESULT_CODE} from "../api/todolist-api";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
-import {
-  addTodolistAC,
-  removeTodolistAC,
-  setTodoListsAC,
-} from "./todolist-reducer";
+import {addTodolistAC, removeTodolistAC, setTodoListsAC} from "./todolist-reducer";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 const initialState: TasksStateType = {};
@@ -109,10 +105,36 @@ export const addTaskTC = (todolistID: string, title: string) =>
       if (res.data.resultCode === RESULT_CODE.SUCCESS) {
         dispatch(addTaskAC({todolistID, task: res.data.data.item}));
         dispatch(setAppStatus({value: 'succeeded'}));
+        
       } else {
         handleServerAppError<{ item: TTaskApi }>(dispatch, res.data);
       }
       dispatch(setAppStatus({value: 'failed'}));
+      
+    } catch (e) {
+      
+      if (axios.isAxiosError(e)) {
+        const error = e.response ? e.response.data.message : e.message;
+        handleServerNetworkError(dispatch, error);
+      }
+    }
+  };
+
+export const updateTaskTitleTC = (todolistId: string, taskID: string, title: string) =>
+  async (dispatch: Dispatch) => {
+    dispatch(setAppStatus({value: 'loading'}));
+    dispatch(changeEntityStatusAC({todolistId, taskID, entityStatus: 'loading'}));
+    
+    try {
+      const res = await taskApi.updateTaskTitle(todolistId, taskID, title);
+      if (res.data.resultCode === RESULT_CODE.SUCCESS) {
+        dispatch(changeTaskTitleAC({todolistId, taskID, title}));
+        dispatch(setAppStatus({value: 'succeeded'}));
+        dispatch(changeEntityStatusAC({todolistId, taskID, entityStatus: 'succeeded'}));
+      } else {
+        handleServerAppError<{}>(dispatch, res.data);
+      }
+      
     } catch (e) {
       if (axios.isAxiosError(e)) {
         const error = e.response ? e.response.data.message : e.message;
@@ -121,53 +143,39 @@ export const addTaskTC = (todolistID: string, title: string) =>
     }
   };
 
-export const updateTaskTitleTC = (todolistId: string, taskID: string, title: string) => (dispatch: Dispatch) => {
-  dispatch(setAppStatus({value: 'loading'}));
-  dispatch(changeEntityStatusAC({todolistId, taskID, entityStatus: 'loading'}));
-  taskApi.updateTaskTitle(todolistId, taskID, title)
-    .then(res => {
-      if (res.data.resultCode === RESULT_CODE.SUCCESS) {
-        dispatch(changeTaskTitleAC({todolistId, taskID, title}));
-        dispatch(setAppStatus({value: 'succeeded'}));
-        dispatch(changeEntityStatusAC({todolistId, taskID, entityStatus: 'succeeded'}));
-      } else {
-        handleServerAppError<{}>(dispatch, res.data);
-      }
-    })
-    .catch((e: AxiosError<{ message: string }>) => {
-      const error = e.response ? e.response.data.message : e.message;
-      handleServerNetworkError(dispatch, error);
-    });
-};
 
-
-export const updateTaskTC = (todolistId: string, taskID: string, status: TaskStatusesType) => (dispatch: Dispatch, getState: () => AppRootStateType) => {
-  const task = getState()
-    .tasks[todolistId].find((t) => t.id === taskID);
-  
-  if (task) {
-    const model: UpdateTaskModelType = {
-      completed: false,
-      title: task.title,
-      deadline: task.deadline,
-      status: status,
-      description: task.description,
-      priority: task.priority,
-      startDate: task.startDate
-    };
-    dispatch(setAppStatus({value: 'loading'}));
+export const updateTaskTC = (todolistId: string, taskID: string, status: TaskStatusesType) =>
+  async (dispatch: Dispatch, getState: () => AppRootStateType) => {
     
-    taskApi.updateTask(todolistId, taskID, model)
-      .then(res => {
+    const task = getState().tasks[todolistId].find((t) => t.id === taskID);
+    
+    try {
+      if (task) {
+        const model: UpdateTaskModelType = {
+          completed: false,
+          title: task.title,
+          deadline: task.deadline,
+          status: status,
+          description: task.description,
+          priority: task.priority,
+          startDate: task.startDate
+        };
+        
+        const res = await taskApi.updateTask(todolistId, taskID, model);
+        
+        dispatch(setAppStatus({value: 'loading'}));
         dispatch(changeTaskStatusAC({todolistId, taskID, status: res.data.data.item.status}));
         dispatch(setAppStatus({value: 'succeeded'}));
-      })
-      .catch((e: AxiosError<{ message: string }>) => {
+        
+      }
+      
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
         const error = e.response ? e.response.data.message : e.message;
         handleServerNetworkError(dispatch, error);
-      });
-  }
-};
+      }
+    }
+  };
 
 // types
 
