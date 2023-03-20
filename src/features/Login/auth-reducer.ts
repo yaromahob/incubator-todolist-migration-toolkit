@@ -8,26 +8,19 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 export const authMe = createAsyncThunk('auth/authMe', async (arg, thunkAPI) => {
   
   thunkAPI.dispatch(setAppStatus({value: 'loading'}));
-  thunkAPI.dispatch(setInitialized({value: false}));
   
   try {
     
     const result = await loginApi.authMe();
     
     if (result.data.resultCode === RESULT_CODE.SUCCESS) {
-      
       thunkAPI.dispatch(setLoggedInAC({value: true}));
       thunkAPI.dispatch(setAppStatus({value: 'succeeded'}));
-      
-    } else {
-      
-      handleServerAppError(thunkAPI.dispatch, result.data);
-      
     }
-    
     thunkAPI.dispatch(setAppStatus({value: 'failed'}));
     
   } catch (e) {
+    thunkAPI.dispatch(setInitialized({value: false}));
     
     if (axios.isAxiosError(e)) {
       

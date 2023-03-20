@@ -5,13 +5,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {AddItemForm} from "../AddItemFrom/AddItemForm";
 import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
-  changeFilterAC,
+  changeFilter,
   FilterValuesType,
   removeTodoListTC,
   updateTodolistTitleTC
 } from "../../state/todolist-reducer";
 import {
-  addTaskTC, changeEntityStatusAC,
+  addTaskTC, changeEntityStatus,
   deleteTasks,
   fetchTasks,
   updateTaskTC,
@@ -43,7 +43,7 @@ export const Todolist = memo(({todolistId, filter, title, entityStatus}: Todolis
   
   const addTask = useCallback(
     (title: string) => {
-      dispatch(addTaskTC(todolistId, title));
+      dispatch(addTaskTC({todolistId, title}));
     },
     [dispatch, todolistId],
   );
@@ -66,17 +66,17 @@ export const Todolist = memo(({todolistId, filter, title, entityStatus}: Todolis
   }, [dispatch]);
   
   
-  const onAllClickHandler = useCallback(() => dispatch(changeFilterAC({
+  const onAllClickHandler = useCallback(() => dispatch(changeFilter({
     filter: 'all',
     id: todolistId
   })), [dispatch, todolistId]);
   
-  const onActiveClickHandler = useCallback(() => dispatch(changeFilterAC({
+  const onActiveClickHandler = useCallback(() => dispatch(changeFilter({
     filter: 'active',
     id: todolistId
   })), [dispatch, todolistId]);
   
-  const onCompletedClickHandler = useCallback(() => dispatch(changeFilterAC({
+  const onCompletedClickHandler = useCallback(() => dispatch(changeFilter({
     filter: 'completed',
     id: todolistId
   })), [dispatch, todolistId]);
@@ -91,7 +91,7 @@ export const Todolist = memo(({todolistId, filter, title, entityStatus}: Todolis
   
   const onChangeTitleHandler = useCallback((taskID: string, newValue: string) => {
     changeTaskTitle(todolistId, taskID, newValue);
-    dispatch(changeEntityStatusAC({todolistId, taskID, entityStatus: 'loading'}));
+    dispatch(changeEntityStatus({todolistId, taskID, entityStatus: 'loading'}));
   }, [changeTaskTitle, todolistId]);
   
   
@@ -116,26 +116,25 @@ export const Todolist = memo(({todolistId, filter, title, entityStatus}: Todolis
         </IconButton>
       </div>
       <AddItemForm addItem={addTask} disabled={entityStatus === "loading"}/>
-      <ul>
-        {
-          tasks.map((t) => {
-            
-            
-            return (
-              <Task key={t.id}
-                    taskID={t.id}
-                    todolistID={t.todoListId}
-                    status={t.status}
-                    title={t.title}
-                    entityStatus={t.entityStatus}
-                    onChangeStatus={onChangeStatusHandler}
-                    onChangeTitle={onChangeTitleHandler}
-                    onClickRemove={onClickRemoveHandler}
-              />
-            );
-          })
-        }
-      </ul>
+      {tasks.length
+        ? <ul>{tasks.map((t) => {
+          
+          
+          return (
+            <Task key={t.id}
+                  taskID={t.id}
+                  todolistID={t.todoListId}
+                  status={t.status}
+                  title={t.title}
+                  entityStatus={t.entityStatus}
+                  onChangeStatus={onChangeStatusHandler}
+                  onChangeTitle={onChangeTitleHandler}
+                  onClickRemove={onClickRemoveHandler}
+            />
+          );
+        })}</ul>
+        : <p className={styles.emptyField}>No tasks</p>
+      }
       <div className={styles.buttonWrapper}>
         <ButtonContainer buttonTitle={'All'}
                          buttonColor={"primary"}

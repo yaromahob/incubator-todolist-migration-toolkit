@@ -11,7 +11,7 @@ const todolistSlice = createSlice({
   name: 'todolists',
   initialState: initialState,
   reducers: {
-    addTodolistAC(state, action: PayloadAction<{ title: string, todolistId: string }>) {
+    addTodolist(state, action: PayloadAction<{ title: string, todolistId: string }>) {
       state.unshift({
         id: action.payload.todolistId,
         title: action.payload.title,
@@ -21,25 +21,25 @@ const todolistSlice = createSlice({
         order: 0,
       });
     },
-    removeTodolistAC(state, action: PayloadAction<{ id: string }>) {
+    removeTodolist(state, action: PayloadAction<{ id: string }>) {
       const index = state.findIndex(tl => tl.id === action.payload.id);
       state.splice(index, 1);
       
     },
-    changeTodolistTitleAC(state, action: PayloadAction<{ id: string, title: string }>) {
+    changeTodolistTitle(state, action: PayloadAction<{ id: string, title: string }>) {
       const index = state.findIndex(tl => tl.id === action.payload.id);
       state[index].title = action.payload.title;
       
     },
-    changeFilterAC(state, action: PayloadAction<{ filter: FilterValuesType, id: string }>) {
+    changeFilter(state, action: PayloadAction<{ filter: FilterValuesType, id: string }>) {
       const index = state.findIndex(tl => tl.id === action.payload.id);
       state[index].filter = action.payload.filter;
     },
-    setTodoListsAC(state, action: PayloadAction<{ todolists: TTodolistApi[] }>) {
+    setTodoLists(state, action: PayloadAction<{ todolists: TTodolistApi[] }>) {
       return action.payload.todolists.map((tl: TTodolistApi) =>
         ({...tl, filter: "all", entityStatus: 'idle',}));
     },
-    changeTodolistEntityStatusAC(state, action: PayloadAction<{ todolistID: string, entityStatus: RequestStatusType }>) {
+    changeTodolistEntityStatus(state, action: PayloadAction<{ todolistID: string, entityStatus: RequestStatusType }>) {
       const index = state.findIndex(tl => tl.id === action.payload.todolistID);
       state[index].entityStatus = action.payload.entityStatus;
     },
@@ -50,12 +50,12 @@ const todolistSlice = createSlice({
 
 export const todolistsReducer = todolistSlice.reducer;
 export const {
-  addTodolistAC,
-  removeTodolistAC,
-  changeTodolistTitleAC,
-  changeTodolistEntityStatusAC,
-  changeFilterAC,
-  setTodoListsAC
+  addTodolist,
+  removeTodolist,
+  changeTodolistTitle,
+  changeTodolistEntityStatus,
+  changeFilter,
+  setTodoLists
 } = todolistSlice.actions;
 
 // thunks
@@ -68,7 +68,7 @@ export const getTodolistTC = () =>
     try {
       const res = await todolistApi.getTodolists();
       
-      dispatch(setTodoListsAC({todolists: res.data}));
+      dispatch(setTodoLists({todolists: res.data}));
       dispatch(setAppStatus({value: 'succeeded'}));
       
     } catch (e) {
@@ -92,7 +92,7 @@ export const createTodoListTC = (todolistTitle: string) =>
       
       if (res.data.resultCode === RESULT_CODE.SUCCESS) {
         
-        dispatch(addTodolistAC({title: res.data.data.item.title, todolistId: res.data.data.item.id}));
+        dispatch(addTodolist({title: res.data.data.item.title, todolistId: res.data.data.item.id}));
         dispatch(setAppStatus({value: 'succeeded'}));
         
       } else {
@@ -117,7 +117,7 @@ export const updateTodolistTitleTC = (todolistID: string, newTodolistTitle: stri
       
       if (res.data.resultCode === RESULT_CODE.SUCCESS) {
         
-        dispatch(changeTodolistTitleAC({title: newTodolistTitle, id: todolistID}));
+        dispatch(changeTodolistTitle({title: newTodolistTitle, id: todolistID}));
         dispatch(setAppStatus({value: 'succeeded'}));
         
       } else {
@@ -136,14 +136,14 @@ export const removeTodoListTC = (todolistID: string) =>
   async (dispatch: Dispatch) => {
     
     dispatch(setAppStatus({value: 'loading'}));
-    dispatch(changeTodolistEntityStatusAC({todolistID: todolistID, entityStatus: 'loading'}));
+    dispatch(changeTodolistEntityStatus({todolistID: todolistID, entityStatus: 'loading'}));
     
     try {
       const res = await todolistApi.deleteTodolist(todolistID);
       
       if (res.data.resultCode === RESULT_CODE.SUCCESS) {
         
-        dispatch(removeTodolistAC({id: todolistID}));
+        dispatch(removeTodolist({id: todolistID}));
         dispatch(setAppStatus({value: 'succeeded'}));
         
       } else {
@@ -153,7 +153,7 @@ export const removeTodoListTC = (todolistID: string) =>
       if (axios.isAxiosError(e)) {
         
         const error = e.response ? e.response.data.message : e.message;
-        dispatch(changeTodolistEntityStatusAC({todolistID: todolistID, entityStatus: 'idle'}));
+        dispatch(changeTodolistEntityStatus({todolistID: todolistID, entityStatus: 'idle'}));
         handleServerNetworkError(dispatch, error);
         
       }
