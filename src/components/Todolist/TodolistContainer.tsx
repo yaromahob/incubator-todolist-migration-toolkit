@@ -4,7 +4,7 @@ import {AddItemForm} from "../AddItemFrom/AddItemForm";
 import Paper from "@mui/material/Paper/Paper";
 import {Todolist} from "./Todolist";
 import {useAppDispatch, useAppSelector} from "../../state/store";
-import {createTodoListTC, getTodolistTC} from "../../state/todolist-reducer";
+import {createTodoList, getTodoList} from "../../state/todolist-reducer";
 import {Navigate} from "react-router-dom";
 
 const TodolistContainer = () => {
@@ -14,7 +14,7 @@ const TodolistContainer = () => {
   
   const addTodolist = useCallback(
     (title: string) => {
-      dispatch(createTodoListTC(title));
+      dispatch(createTodoList(title));
     },
     [dispatch],
   );
@@ -22,7 +22,7 @@ const TodolistContainer = () => {
   useEffect(() => {
     if (!isLoggedIn) return;
     
-    dispatch(getTodolistTC());
+    dispatch(getTodoList());
   }, [dispatch]);
   
   if (!isLoggedIn) {

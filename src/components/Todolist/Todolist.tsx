@@ -7,15 +7,15 @@ import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
   changeFilter,
   FilterValuesType,
-  removeTodoListTC,
-  updateTodolistTitleTC
+  removeTodoList,
+  updateTodoListTitle
 } from "../../state/todolist-reducer";
 import {
-  addTaskTC, changeEntityStatus,
+  addTask, changeEntityStatus,
   deleteTasks,
   fetchTasks,
-  updateTaskTC,
-  updateTaskTitleTC
+  updateTask,
+  updateTaskTitle
 } from "../../state/task-reducer";
 import Task from "../Task/Task";
 import ButtonContainer from "../ButtonContainer";
@@ -41,28 +41,28 @@ export const Todolist = memo(({todolistId, filter, title, entityStatus}: Todolis
     dispatch(fetchTasks(todolistId));
   }, [dispatch, todolistId]);
   
-  const addTask = useCallback(
+  const addItem = useCallback(
     (title: string) => {
-      dispatch(addTaskTC({todolistId, title}));
+      dispatch(addTask({todolistId, title}));
     },
     [dispatch, todolistId],
   );
   
   
   const removeTodolist = useCallback(() => {
-    dispatch(removeTodoListTC(todolistId));
+    dispatch(removeTodoList(todolistId));
   }, [dispatch, todolistId]);
   
   const changeTodolistTitle = useCallback((title: string) => {
-    dispatch(updateTodolistTitleTC(todolistId, title));
+    dispatch(updateTodoListTitle({todolistId, title}));
   }, [dispatch, todolistId]);
   
   const changeTaskStatus = useCallback((todolistId: string, taskID: string, status: TaskStatusesType) => {
-    dispatch(updateTaskTC(todolistId, taskID, status));
+    dispatch(updateTask({todolistId, taskID, status}));
   }, [dispatch]);
   
   const changeTaskTitle = useCallback((todolistId: string, taskID: string, title: string) => {
-    dispatch(updateTaskTitleTC(todolistId, taskID, title));
+    dispatch(updateTaskTitle({todolistId, taskID, title}));
   }, [dispatch]);
   
   
@@ -115,7 +115,7 @@ export const Todolist = memo(({todolistId, filter, title, entityStatus}: Todolis
           <DeleteIcon/>
         </IconButton>
       </div>
-      <AddItemForm addItem={addTask} disabled={entityStatus === "loading"}/>
+      <AddItemForm addItem={addItem} disabled={entityStatus === "loading"}/>
       {tasks.length
         ? <ul>{tasks.map((t) => {
           
