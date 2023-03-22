@@ -28,7 +28,6 @@ const Task: React.FC<TaskType> = memo(({
                                          onChangeStatus,
                                          onChangeTitle
                                        }) => {
-  console.log('TASK_RERENDER');
   
   const onClickRemoveHandler = () => {
     onClickRemove(taskID);

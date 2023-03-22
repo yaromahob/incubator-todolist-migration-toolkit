@@ -34,7 +34,6 @@ export type TodolistPropsType = {
 }
 
 export const Todolist = memo(({todolistId, filter, title, entityStatus}: TodolistPropsType) => {
-  console.log('Todolist_RERENDER');
   const dispatch = useAppDispatch();
   let tasks = useAppSelector(state => state.tasks[todolistId]);
   useEffect(() => {

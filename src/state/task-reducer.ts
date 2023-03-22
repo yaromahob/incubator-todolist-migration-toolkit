@@ -14,14 +14,8 @@ export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (todolistID
   
   const res = await taskApi.getTasks(todolistID);
   const tasks = res.data.items;
-  console.log(tasks);
   thunkAPI.dispatch(setAppStatus({value: 'succeeded'}));
   return {todolistID, tasks};
-  
-  // .catch((e: AxiosError<{ message: string }>) => {
-  //   const error = e.response ? e.response.data.message : e.message;
-  //   handleServerNetworkError(thunkAPI.dispatch, error);
-  // });
 });
 
 export const addTask = createAsyncThunk('tasks/addTask', async (param: { todolistId: string, title: string }, thunkAPI) => {
