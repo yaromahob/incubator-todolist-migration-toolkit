@@ -1,6 +1,5 @@
 import React, {memo} from 'react';
 import Button from "@mui/material/Button";
-import {FilterValuesType} from '../state/todolist-reducer';
 
 type ButtonContainerType = {
   buttonTitle: string
@@ -10,7 +9,7 @@ type ButtonContainerType = {
   callback: () => void
 }
 
-const ButtonContainer: React.FC<ButtonContainerType> = memo(({buttonTitle, buttonColor, callback}) => {
+export const ButtonContainer: React.FC<ButtonContainerType> = memo(({buttonTitle, buttonColor, callback}) => {
   return (
     <Button variant={"contained"}
             color={buttonColor}
@@ -22,4 +21,4 @@ const ButtonContainer: React.FC<ButtonContainerType> = memo(({buttonTitle, butto
   );
 });
 
-export default ButtonContainer;
+

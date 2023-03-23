@@ -18,7 +18,7 @@ type TaskType = {
   onChangeTitle: (taskID: string, title: string) => void
 }
 
-const Task: React.FC<TaskType> = memo(({
+export const Task: React.FC<TaskType> = memo(({
                                          todolistID,
                                          taskID,
                                          status,
@@ -34,6 +34,7 @@ const Task: React.FC<TaskType> = memo(({
   };
   
   const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    
     let isCompleted = e.currentTarget.checked;
     onChangeStatus(taskID, isCompleted ? 2 : 0);
   };
@@ -56,4 +57,4 @@ const Task: React.FC<TaskType> = memo(({
   );
 });
 
-export default Task;
+

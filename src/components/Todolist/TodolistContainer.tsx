@@ -7,7 +7,7 @@ import {useAppDispatch, useAppSelector} from "../../state/store";
 import {createTodoList, getTodoList} from "../../state/todolist-reducer";
 import {Navigate} from "react-router-dom";
 
-const TodolistContainer = () => {
+export const TodolistContainer = () => {
   const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
   const todolists = useAppSelector(state => state.todolists);
   const dispatch = useAppDispatch();
@@ -56,4 +56,3 @@ const TodolistContainer = () => {
   );
 };
 
-export default TodolistContainer;

@@ -48,7 +48,6 @@ export const Input = (props: InputPropsType) => {
 							onClick={addTask}>
 				+
 			</Button>
-			{/*{error && <div className="error-message">{error}</div>}*/}
 		</div>
 	);
 };

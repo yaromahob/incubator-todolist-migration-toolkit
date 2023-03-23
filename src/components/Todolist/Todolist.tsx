@@ -17,8 +17,8 @@ import {
   updateTask,
   updateTaskTitle
 } from "../../state/task-reducer";
-import Task from "../Task/Task";
-import ButtonContainer from "../ButtonContainer";
+import {Task} from "../Task/Task";
+import {ButtonContainer} from "../ButtonContainer";
 import {TaskStatusesType} from "../../api/task-api";
 import {RequestStatusType} from "../../App/app-reducer";
 import styles from './Todolist.module.scss';

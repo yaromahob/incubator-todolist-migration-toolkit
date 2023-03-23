@@ -9,28 +9,28 @@ type EditableSpanPropsType = {
   onChange: (newValue: string) => void
 }
 
-export function EditableSpan(props: EditableSpanPropsType) {
+export const EditableSpan: React.FC<EditableSpanPropsType> = ({value, onChange}) => {
   const [editMode, setEditMode] = useState(false);
-  const [title, setTitle] = useState(props.value);
+  const [title, setTitle] = useState(value);
   const [isErrorTitle, setIsErrorTitle] = useState('');
   const [error, setError] = useState<null | string>(null);
   
   useEffect(() => {
-    setIsErrorTitle(props.value);
+    setIsErrorTitle(value);
   }, []);
   
   const activateEditMode = () => {
     setEditMode(true);
-    setTitle(props.value);
+    setTitle(value);
   };
   
   const activateViewMode = () => {
     setEditMode(false);
     
     if (title.length > 20) {
-      props.onChange(isErrorTitle);
+      onChange(isErrorTitle);
       
-    } else props.onChange(title);
+    } else onChange(title);
   };
   
   const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +59,7 @@ export function EditableSpan(props: EditableSpanPropsType) {
             autoFocus
             error={!!error}
           />
-          : <span onDoubleClick={activateEditMode}>{props.value}</span>
+          : <span onDoubleClick={activateEditMode}>{value}</span>
       }
     </div>
   );
